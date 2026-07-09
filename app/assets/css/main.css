@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@theme {
+    /* Font */
+    --font-sans: "Roboto", sans-serif;
+
+    /* Breakpoints */
+    --breakpoint-sm: 768px;
+    --breakpoint-md: 1024px;
+    --breakpoint-lg: 1280px;
+    --breakpoint-xl: 1368px;
+    --breakpoint-2xl: 1440px;
+
+    /* Shadows */
+    --shadow-xs: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0px 1px 3px rgba(18, 25, 38, 0.1), 0px 1px 2px rgba(18, 25, 38, 0.06);
+    --shadow-md: 0px 4px 8px -2px rgba(18, 25, 38, 0.1), 0px 2px 4px -2px rgba(18, 25, 38, 0.06);
+    --shadow-lg: 0px 12px 16px -4px rgba(18, 25, 38, 0.08), 0px 4px 6px -2px rgba(18, 25, 38, 0.03);
+    --shadow-xl: 0px 20px 24px -4px rgba(18, 25, 38, 0.08), 0px 8px 8px -4px rgba(18, 25, 38, 0.03);
+    --shadow-2xl: 0px 24px 48px -12px rgba(18, 25, 38, 0.18);
+
+    /* Font sizes (size / line-height) */
+    --text-h1: 40px / 1.2;
+    --text-h2: 36px / 1.11;
+    --text-h3: 32px / 1.25;
+    --text-h4: 28px / 1.29;
+    --text-h5: 24px / 1.33;
+    --text-h6: 20px / 1.4;
+    --text-paragraph-l: 18px / 1.56;
+    --text-paragraph-m: 16px / 1.5;
+    --text-paragraph-s: 14px / 1.4;
+    --text-paragraph-xs: 12px / 1.33;
+
+    /* Letter spacing */
+    --tracking-heading: -0.02em;
+
+    /* Palette colors */
+    --color-dual-orange-50: #fff9f6;
+    --color-dual-orange-100: #ffefe7;
+    --color-dual-orange-200: #fee1d3;
+    --color-dual-orange-300: #feceb5;
+    --color-dual-orange-400: #feba98;
+    --color-dual-orange-500: #fd874c;
+    --color-dual-orange-600: #ed7a41;
+    --color-dual-orange-700: #df8150;
+    --color-dual-orange-800: #b86941;
+    --color-dual-orange-900: #844f35;
+
+    --color-dual-grey-50: #EEF1F5;
+    --color-dual-grey-100: #E8ECF2;
+    --color-dual-grey-200: #D8DBE1;
+    --color-dual-grey-300: #C4C8CE;
+    --color-dual-grey-400: #9FA4AB;
+    --color-dual-grey-500: #7a7F87;
+    --color-dual-grey-600: #70757D;
+    --color-dual-grey-700: #62676F;
+    --color-dual-grey-800: #4F555B;
+    --color-dual-grey-900: #383A42;
+
+    --color-dual-green-50: #f5fcf8;
+    --color-dual-green-100: #e3f7ed;
+    --color-dual-green-200: #c9f0dd;
+    --color-dual-green-300: #a8e6c7;
+    --color-dual-green-400: #85daad;
+    --color-dual-green-500: #64cb8f;
+    --color-dual-green-600: #59b57f;
+    --color-dual-green-700: #51a170;
+    --color-dual-green-800: #44885f;
+    --color-dual-green-900: #2d5f42;
+
+    --color-dual-red-50: #fef5f5;
+    --color-dual-red-100: #fceceb;
+    --color-dual-red-200: #f7d1cd;
+    --color-dual-red-300: #f4b9b5;
+    --color-dual-red-400: #f09289;
+    --color-dual-red-500: #ec5f51;
+    --color-dual-red-600: #ea3b28;
+    --color-dual-red-700: #d33120;
+    --color-dual-red-800: #ad2718;
+    --color-dual-red-900: #831c0f;
+
+}
+
+@layer base {
+    :root {
+        font-family: "Roboto", sans-serif;
+        line-height: 1.4;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        font-weight: 400;
+        line-height: 1.4;
+        font-size: 14px;
+        background-color: rgb(248, 246, 242);
+        color: #4F555B;
+    }
+
+    ::placeholder {
+        opacity: 1;
+        color: #9FA4AB;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+    }
+
+    input[data-autocompleted] {
+        background-color: transparent !important;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        list-style-position: inside;
+    }
+
+    ol {
+        list-style-position: inside;
+        margin: 0;
+        padding: 0;
+    }
+}
