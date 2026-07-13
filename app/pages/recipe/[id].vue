@@ -6,7 +6,7 @@
         <CommonButton variant="primary" @click="() => console.log('Click')">Зберегти</CommonButton>
       </template>
     </PageTitle>
-    <div class="flex justify-center mt-3 flex-col">
+    <div class="flex justify-center mt-3 flex-col" data-aos="fade-up" data-aos-duration="1000">
       <div class="flex justify-center mb-5">
         <img
           v-if="recipeDetails.recipeImage"
@@ -31,7 +31,7 @@
         <FieldsGroupTitle title="Опис" />
         <div>{{ recipeDetails.description }}</div>
       </div>
-      <div class="flex flex-col mb-5">
+      <div class="flex flex-col mb-5" data-aos="flip-left" data-aos-duration="1000">
         <FieldsGroupTitle title="Інгредієнти" />
         <ul class="list-[circle] pl-6 list-outside mt-4">
           <li class="mb-3" v-for="ingredient in recipeDetails.ingredients" :key="ingredient.id">
@@ -39,7 +39,7 @@
           </li>
         </ul>
       </div>
-      <div class="flex flex-col gap-3 mb-5">
+      <div class="flex flex-col gap-3 mb-5" data-aos="flip-down" data-aos-duration="1000">
         <FieldsGroupTitle title="Інструкція" />
         <ol class="list-decimal list-outside pl-6">
           <li v-for="step in recipeDetails.steps" class="mb-3 text-justify">{{ step.stepDescription }}</li>
