@@ -44,8 +44,8 @@ import type { RecipeTableModel, RecipesPaginationModel } from '~/types/types';
 
 const MIN_QUERY_LENGTH = 3;
 const DEBOUNCE_MS = 400;
-const API_URL = 'https://dual-cookbook-server.onrender.com';
 
+const { public: { apiUrl } } = useRuntimeConfig();
 const router = useRouter();
 
 const selectedRecipe = ref<RecipeTableModel | string>('');
@@ -58,7 +58,7 @@ let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 const fetchSuggestions = async (query: string) => {
   isSearching.value = true;
   try {
-    const result = await $fetch<RecipesPaginationModel>(`${API_URL}/api/recipes`, {
+    const result = await $fetch<RecipesPaginationModel>(`${apiUrl}/api/recipes`, {
       query: { search: query, limit: 10, page: 1 },
     });
     suggestions.value = result.data;

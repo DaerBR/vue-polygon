@@ -21,12 +21,59 @@ export default defineNuxtConfig({
   devServer: {
     port: 5174,
   },
+  runtimeConfig: {
+    public: {
+      apiUrl: 'https://dual-cookbook-server.onrender.com',
+    },
+  },
   css: ['./app/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ['@primevue/nuxt-module', 'nuxt-aos'],
+  modules: ['@primevue/nuxt-module', 'nuxt-aos', '@vite-pwa/nuxt'],
   primevue: {/* Configuration */},
+  pwa: {
+    registerType: 'autoUpdate',
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
+    manifest: {
+      name: 'Nuxt Полігон',
+      short_name: 'Полігон',
+      description: 'Nuxt/Vue learning playground',
+      theme_color: '#ffffff',
+      icons: [
+        { src: '/favicon.png', sizes: '192x192', type: 'image/png' },
+        { src: '/favicon.png', sizes: '512x512', type: 'image/png' },
+      ],
+    },
+    workbox: {
+      runtimeCaching: [
+        {
+          // external API (dual-cookbook-server) — cross-origin, cache-first-ish so cached
+          // recipe/category data can still render offline or on a flaky connection
+          urlPattern: ({ url }) => url.origin === 'https://dual-cookbook-server.onrender.com',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'external-api-cache',
+            expiration: { maxEntries: 50, maxAgeSeconds: 60 * 5 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          // same-origin Nuxt server routes, e.g. /api/users
+          urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/api/'),
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'internal-api-cache',
+            expiration: { maxEntries: 50, maxAgeSeconds: 60 * 5 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+      ],
+    },
+  },
   aos: {
     // Global settings:
     disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function

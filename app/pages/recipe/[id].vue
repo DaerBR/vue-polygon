@@ -61,10 +61,11 @@
 import type { RecipeDetailModel } from '~/types/types';
 import PageTitle from '~/components/PageTitle.vue';
 import FieldsGroupTitle from '~/components/FieldsGroupTitle.vue';
+const { public: { apiUrl } } = useRuntimeConfig();
 const route = useRoute();
 const recipeId = route.params.id;
 
 const { data: recipeDetails, status } = await useFetch<RecipeDetailModel>(
-  `https://dual-cookbook-server.onrender.com/api/recipes/${recipeId}`,
+  `${apiUrl}/api/recipes/${recipeId}`,
 );
 </script>

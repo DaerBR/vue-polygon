@@ -11,10 +11,16 @@
 <script setup lang="ts">
 import type { RecipesPaginationModel } from '~/types/types';
 
+const { public: { apiUrl } } = useRuntimeConfig();
+
 const { data: recipes, status } = await useFetch<RecipesPaginationModel>(
-  'https://dual-cookbook-server.onrender.com/api/recipes',
+  `${apiUrl}/api/recipes`,
   {
     query: { limit: 10, page: 1 },
   },
 );
+
+// Testing Drizzle
+const { data: users } = await useFetch('/api/users');
+console.log(users.value);
 </script>
