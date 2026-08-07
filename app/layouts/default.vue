@@ -1,4 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { user, isLoggedIn, areUserDataFetched, isLoading, fetchUser, login, logout } = useAuth();
+
+onMounted(() => {
+  if (!areUserDataFetched.value) {
+    fetchUser();
+  }
+});
+</script>
+
 <template>
   <header class="sticky top-0 z-50">
     <div
@@ -11,11 +20,25 @@
           />
         </NuxtLink>
         <NuxtLink to="/categories">
-          <div class="font-bold mr-6 no-underline hover:underline text-1">Всі категорії</div>
+          <div class="font-bold mr-6 no-underline text-dual-orange-500 hover:underline text-1">Всі категорії</div>
         </NuxtLink>
         <div class="w-[300px] max-md:w-[230px] max-sm:hidden">
           <SearchAutocomplete />
         </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <template v-if="isLoggedIn">
+          <CommonButton @click="navigateTo('/create-recipe')" class="mr-4">Створити рецепт</CommonButton>
+          <button
+            class="p-2.5 bg-transparent border-none cursor-pointer text-dual-orange-600 hover:text-dual-orange-500"
+            type="button"
+            aria-label="Вийти"
+            @click="logout"
+          >
+            <IconLogout :size="18" />
+          </button>
+        </template>
+        <CommonButton v-else-if="!isLoading" variant="primary" @click="login">Вхід</CommonButton>
       </div>
     </div>
   </header>

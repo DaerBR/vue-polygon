@@ -11,16 +11,11 @@
 <script setup lang="ts">
 import type { RecipesPaginationModel } from '~/types/types';
 
-const { public: { apiUrl } } = useRuntimeConfig();
+const {
+  public: { apiUrl },
+} = useRuntimeConfig();
 
-const { data: recipes, status } = await useFetch<RecipesPaginationModel>(
-  `${apiUrl}/api/recipes`,
-  {
-    query: { limit: 10, page: 1 },
-  },
-);
-
-// Testing Drizzle
-const { data: users } = await useFetch('/api/users');
-console.log(users.value);
+const { data: recipes, status } = await useFetch<RecipesPaginationModel>(`${apiUrl}/api/recipes`, {
+  query: { limit: 10, page: 1 },
+});
 </script>

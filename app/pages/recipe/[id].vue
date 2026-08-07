@@ -2,8 +2,10 @@
   <div v-if="status === 'pending'">Зачекай-но...</div>
   <div v-else-if="status === 'success' && recipeDetails">
     <PageTitle :title="recipeDetails.name" with-return-button>
-      <template #controls>
-        <CommonButton variant="primary" @click="() => console.log('Click')">Зберегти</CommonButton>
+      <template #controls v-if="isLoggedIn">
+        <CommonButton variant="secondary" @click="navigateTo(`/edit-recipe/${recipeDetails.id}`)"
+          >Редагувати</CommonButton
+        >
       </template>
     </PageTitle>
     <div class="flex justify-center mt-3 flex-col" data-aos="fade-up" data-aos-duration="1000">
@@ -61,11 +63,11 @@
 import type { RecipeDetailModel } from '~/types/types';
 import PageTitle from '~/components/PageTitle.vue';
 import FieldsGroupTitle from '~/components/FieldsGroupTitle.vue';
-const { public: { apiUrl } } = useRuntimeConfig();
+const {
+  public: { apiUrl },
+} = useRuntimeConfig();
 const route = useRoute();
 const recipeId = route.params.id;
-
-const { data: recipeDetails, status } = await useFetch<RecipeDetailModel>(
-  `${apiUrl}/api/recipes/${recipeId}`,
-);
+const { isLoggedIn } = useAuth();
+const { data: recipeDetails, status } = await useFetch<RecipeDetailModel>(`${apiUrl}/api/recipes/${recipeId}`);
 </script>

@@ -17,19 +17,7 @@
           :disabled="currentPageIndex <= 0"
           @click="prevPageCallback"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="10"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
+          <IconChevronLeft :size="10" />
         </button>
 
         <div class="flex items-center gap-3 max-sm:hidden">
@@ -61,19 +49,7 @@
           :disabled="!pageCount || currentPageIndex >= pageCount - 1"
           @click="nextPageCallback"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="10"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
+          <IconChevronRight :size="10" />
         </button>
       </div>
     </template>

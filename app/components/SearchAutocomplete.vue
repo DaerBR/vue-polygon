@@ -19,20 +19,7 @@
       type="button"
       @click="handleNavigate"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <path d="M21 21l-4.35-4.35" />
-      </svg>
+      <IconSearch :size="14" />
     </button>
   </div>
 </template>
@@ -46,7 +33,6 @@ const MIN_QUERY_LENGTH = 3;
 const DEBOUNCE_MS = 400;
 
 const { public: { apiUrl } } = useRuntimeConfig();
-const router = useRouter();
 
 const selectedRecipe = ref<RecipeTableModel | string>('');
 const suggestions = ref<RecipeTableModel[]>([]);
@@ -78,13 +64,13 @@ const onComplete = (event: { query: string }) => {
 };
 
 const onOptionSelect = (event: { value: RecipeTableModel }) => {
-  router.push(`/recipe/${event.value.id}`);
+  navigateTo(`/recipe/${event.value.id}`);
   selectedRecipe.value = '';
   searchTerm = '';
 };
 
 const handleNavigate = () => {
-  router.push(searchTerm ? `/search?searchTerm=${searchTerm}` : '/search');
+  navigateTo(searchTerm ? `/search?searchTerm=${searchTerm}` : '/search');
 };
 
 const pt = {

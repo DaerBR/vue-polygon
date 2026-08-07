@@ -41,3 +41,9 @@ export interface RecipeDetailModel extends RecipeTableModel {
   sourceUrl?: string;
   steps: RecipeStep[];
 }
+
+export interface UserModel {
+  id: string;
+  displayName: string;
+  email: string;
+}

@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiUrl: 'https://dual-cookbook-server.onrender.com',
+      apiUrl: 'https://dev-dual-cookbook-server.onrender.com',
     },
   },
   css: ['./app/assets/css/main.css'],
@@ -35,7 +35,7 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     devOptions: {
-      enabled: true,
+      enabled: false,
       type: 'module',
     },
     manifest: {
