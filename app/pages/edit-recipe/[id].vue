@@ -6,7 +6,9 @@ definePageMeta({
   middleware: 'auth-guard',
 });
 
-const { public: { apiUrl } } = useRuntimeConfig();
+const {
+  public: { apiUrl },
+} = useRuntimeConfig();
 const route = useRoute();
 const recipeId = route.params.id as string;
 
@@ -60,13 +62,18 @@ const handleDelete = async () => {
     </PageTitle>
 
     <RecipeForm
-      submit-label="Зберегти"
+      isEdit
       :initial-values="initialValues"
       :initial-image-url="recipeDetails.recipeImage?.secureUrl"
       :on-submit="handleUpdate"
     />
 
-    <ConfirmModal v-model:is-open="isDeleteModalOpen" title="Видалити рецепт?" confirm-label="Видалити" @confirm="handleDelete">
+    <ConfirmModal
+      v-model:is-open="isDeleteModalOpen"
+      title="Видалити рецепт?"
+      confirm-label="Видалити"
+      @confirm="handleDelete"
+    >
       Цей рецепт буде видалений безповоротно. Ви впевнені, що хочете продовжити?
     </ConfirmModal>
   </div>

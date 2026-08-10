@@ -24,7 +24,6 @@ const handleCreate = async (payload: RecipeFormSubmitPayload) => {
 <template>
   <div v-if="isLoggedIn">
     <PageTitle title="Додати рецепт" with-return-button />
-    <RecipeFxorm submit-label="Створити" :on-submit="handleCreate" />
+    <RecipeForm :on-submit="handleCreate" />
   </div>
 </template>
-xx

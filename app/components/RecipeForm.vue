@@ -10,12 +10,12 @@ import { getBase64OfFile } from '~/utils/getBase64OfFile';
 
 const props = withDefaults(
   defineProps<{
+    isEdit?: boolean;
     initialValues?: RecipeFormValues;
     initialImageUrl?: string;
-    submitLabel?: string;
     onSubmit: (payload: RecipeFormSubmitPayload) => Promise<void>;
   }>(),
-  { submitLabel: 'Створити' },
+  { isEdit: false },
 );
 
 const router = useRouter();
@@ -55,14 +55,16 @@ const [sourceUrl] = defineField('sourceUrl');
 const [selectedCategories] = defineField('categories');
 const [recipeImage] = defineField('recipeImage');
 
-const { fields: ingredientFields, push: addIngredient, remove: removeIngredient } =
-  useFieldArray<{ text: string }>('ingredients');
-const { fields: stepFields, push: addStep, remove: removeStep } =
-  useFieldArray<{ stepDescription: string }>('steps');
+const {
+  fields: ingredientFields,
+  push: addIngredient,
+  remove: removeIngredient,
+} = useFieldArray<{ text: string }>('ingredients');
+const { fields: stepFields, push: addStep, remove: removeStep } = useFieldArray<{ stepDescription: string }>('steps');
 
 const isSubmitting = ref(false);
 
-const submit = handleSubmit(async (formValues) => {
+const handleFormSubmit = handleSubmit(async (formValues) => {
   isSubmitting.value = true;
   try {
     const payload: RecipeFormSubmitPayload = {
@@ -71,7 +73,10 @@ const submit = handleSubmit(async (formValues) => {
       ingredients: formValues.ingredients,
       steps: formValues.steps,
       recipeImage: formValues.recipeImage
-        ? { base64Content: await getBase64OfFile(formValues.recipeImage), nameWithExtension: formValues.recipeImage.name }
+        ? {
+            base64Content: await getBase64OfFile(formValues.recipeImage),
+            nameWithExtension: formValues.recipeImage.name,
+          }
         : null,
       description: formValues.description || null,
       sourceUrl: formValues.sourceUrl || undefined,
@@ -85,7 +90,7 @@ const submit = handleSubmit(async (formValues) => {
 </script>
 
 <template>
-  <form class="flex flex-col" @submit.prevent="submit">
+  <form class="flex flex-col" @submit.prevent="handleFormSubmit">
     <div class="flex gap-6 flex-nowrap basis-full max-sm:flex-col">
       <div class="flex basis-75 flex-col max-sm:w-full">
         <CommonImageInput v-model="recipeImage" :initial-preview-url="initialImageUrl" />
@@ -174,7 +179,7 @@ const submit = handleSubmit(async (formValues) => {
         :is-disabled="!meta.valid || categories.length === 0"
         :is-busy="isSubmitting"
       >
-        {{ submitLabel }}
+        {{ isEdit ? 'Зберегти' : 'Створити' }}
       </CommonButton>
       <CommonButton type="button" variant="outlined-neutral" @click="router.back()">Скасувати</CommonButton>
     </div>
