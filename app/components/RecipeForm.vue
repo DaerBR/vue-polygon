@@ -49,9 +49,6 @@ watch(
   },
 );
 
-const [name] = defineField('name');
-const [description] = defineField('description');
-const [sourceUrl] = defineField('sourceUrl');
 const [selectedCategories] = defineField('categories');
 const [recipeImage] = defineField('recipeImage');
 
@@ -98,7 +95,7 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         <div class="flex flex-col mt-6">
           <FieldsGroupTitle title="Інгредієнти" />
           <div class="flex flex-col gap-2 mt-2">
-            <FormArrayItemField
+            <FormField
               v-for="(field, index) in ingredientFields"
               :key="field.key"
               :name="`ingredients[${index}].text`"
@@ -121,14 +118,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mt-6">
-          <CommonTextInput v-model="sourceUrl" label="Посилання" />
+          <FormField name="sourceUrl" label="Посилання" />
         </div>
       </div>
 
       <div class="flex flex-col ml-6 w-full max-sm:ml-0">
         <div class="mb-6">
-          <CommonTextInput v-model="name" label="Назва рецепту" />
-          <p v-if="errors.name" class="text-paragraph-xs text-dual-red-600 mt-1">{{ errors.name }}</p>
+          <FormField name="name" label="Назва рецепту" />
         </div>
 
         <div class="mb-6">
@@ -141,13 +137,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mb-6">
-          <CommonTextarea v-model="description" label="Опис" :rows="3" />
+          <FormField name="description" label="Опис" multiline :rows="3" />
         </div>
 
         <div class="mb-6">
           <FieldsGroupTitle title="Покрокова інструкція" />
           <div class="flex flex-col gap-4 mt-2">
-            <FormArrayItemField
+            <FormField
               v-for="(field, index) in stepFields"
               :key="field.key"
               :name="`steps[${index}].stepDescription`"

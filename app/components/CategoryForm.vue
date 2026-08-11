@@ -25,7 +25,7 @@ const defaultValues: CategoryFormValues = {
   name: '',
 };
 
-const { defineField, errors, meta, handleSubmit, resetForm } = useForm<CategoryFormValues>({
+const { defineField, meta, handleSubmit, resetForm } = useForm<CategoryFormValues>({
   validationSchema: toTypedSchema(categoryFormValidationSchema),
   initialValues: props.initialValues ?? defaultValues,
 });
@@ -39,7 +39,6 @@ watch(
 
 const isSubmitting = ref(false);
 
-const [name] = defineField('name');
 const [categoryImage] = defineField('categoryImage');
 
 const handleFormSubmit = handleSubmit(async (formValues) => {
@@ -71,8 +70,7 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
       </div>
       <div class="flex flex-col ml-6 w-full max-sm:ml-0">
         <div class="mb-6">
-          <CommonTextInput v-model="name" label="Назва категорії" />
-          <p v-if="errors.name" class="text-paragraph-xs text-dual-red-600 mt-1">{{ errors.name }}</p>
+          <FormField name="name" label="Назва категорії" />
         </div>
       </div>
     </div>
