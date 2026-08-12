@@ -25,7 +25,7 @@ export const useAuth = () => {
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
 
-    window.open(`${apiUrl}/auth/google`, 'google-auth', `width=${width},height=${height},left=${left},top=${top}`);
+    window.open(`${apiUrl}/api/auth/google`, 'google-auth', `width=${width},height=${height},left=${left},top=${top}`);
 
     const apiOrigin = new URL(apiUrl).origin;
 
