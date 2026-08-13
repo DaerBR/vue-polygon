@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     cloudinaryCloudName: '',
     cloudinaryApiKey: '',
     cloudinaryApiSecret: '',
+    mongoUri: '',
     public: {
       apiUrl: 'http://localhost:5174',
     },

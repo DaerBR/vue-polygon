@@ -1,23 +1,25 @@
-import { asc, count, like } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { categories } from '../../db/schema';
-import { toCategoryModel } from '../../utils/serializers';
+import { connectDB } from '../../utils/db';
+import { Category } from '../../models/Category';
+import { renameMongoIdsForClient } from '../../utils/renameMongoIdsForClient';
 import { buildPaginationMeta, parsePagination } from '../../utils/pagination';
+import { escapeRegex } from '../../utils/requestValidation';
 
 export default defineEventHandler(async (event) => {
+  await connectDB();
+
   const query = getQuery(event);
-  const { page, limit, offset } = parsePagination(query);
+  const { page, limit, skip } = parsePagination(query);
   const search = typeof query.search === 'string' ? query.search.trim() : '';
 
-  const whereClause = search ? like(categories.name, `%${search}%`) : undefined;
+  const filter = search ? { name: { $regex: escapeRegex(search), $options: 'i' } } : {};
 
-  const [rows, totalRows] = await Promise.all([
-    db.select().from(categories).where(whereClause).orderBy(asc(categories.name)).limit(limit).offset(offset),
-    db.select({ total: count() }).from(categories).where(whereClause),
+  const [total, data] = await Promise.all([
+    Category.countDocuments(filter),
+    Category.find(filter).sort({ name: 1 }).skip(skip).limit(limit).lean(),
   ]);
 
   return {
-    data: rows.map(toCategoryModel),
-    pagination: buildPaginationMeta(page, limit, totalRows[0]?.total ?? 0),
+    data: renameMongoIdsForClient(data),
+    pagination: buildPaginationMeta(page, limit, total),
   };
 });

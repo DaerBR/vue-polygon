@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex flex-col">
-    <CommonTextarea v-if="multiline" v-model="value" :rows="rows" :label="label" />
-    <CommonTextInput v-else v-model="value" :label="label" />
+    <CommonTextarea v-if="multiline" v-model="value" :rows="rows" :label="label" :placeholder="placeholder" />
+    <CommonTextInput v-else v-model="value" :label="label" :placeholder="placeholder" />
     <p v-if="errorMessage" class="text-paragraph-xs text-dual-red-600 mt-1">{{ errorMessage }}</p>
     <DeleteIconButton v-if="showDelete" class="absolute -right-8 top-0" @click="$emit('remove')" />
   </div>
@@ -15,6 +15,7 @@ const props = withDefaults(
     name: string;
     label: string;
     multiline?: boolean;
+    placeholder?: string;
     rows?: number;
     showDelete?: boolean;
   }>(),

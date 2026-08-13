@@ -1,23 +1,24 @@
-import { eq } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { categories } from '../../db/schema';
-import { toCategoryModel } from '../../utils/serializers';
+import { connectDB } from '../../utils/db';
+import { Category } from '../../models/Category';
 import { apiError } from '../../utils/apiError';
-import { parseCategoryImageUpload } from '../../utils/requestValidation';
+import { isDuplicateKeyError, parseCategoryImageUpload } from '../../utils/requestValidation';
+import { isValidObjectId } from '../../utils/mongo';
 import { destroyImageByPublicId, uploadCategoryImage } from '../../utils/cloudinary';
 import { requireLogin } from '../../utils/requireLogin';
 
 export default defineEventHandler(async (event) => {
   await requireLogin(event);
+  await connectDB();
 
   const id = getRouterParam(event, 'id');
-  if (!id) return apiError(400, 'Invalid category id');
+  if (!id || !isValidObjectId(id)) return apiError(400, 'Invalid category id');
 
-  const existing = await db.query.categories.findFirst({ where: eq(categories.id, id) });
+  const existing = await Category.findById(id);
   if (!existing) return apiError(404, 'Category not found');
 
   const body = await readBody<Record<string, unknown>>(event);
-  const updates: Partial<typeof categories.$inferInsert> = {};
+  const $set: Record<string, unknown> = {};
+  const $unset: Record<string, ''> = {};
   let previousImagePublicId: string | undefined;
   let orphanNewImagePublicId: string | undefined;
 
@@ -25,28 +26,23 @@ export default defineEventHandler(async (event) => {
     if (typeof body.name !== 'string' || !body.name.trim()) {
       return apiError(400, 'name must be a non-empty string');
     }
-    const trimmed = body.name.trim();
-    const duplicate = await db.query.categories.findFirst({ where: eq(categories.name, trimmed) });
-    if (duplicate && duplicate.id !== id) {
-      return apiError(409, 'A category with this name already exists');
-    }
-    updates.name = trimmed;
+    $set.name = body.name.trim();
   }
 
   if (body.categoryImage !== undefined && body.categoryImage !== null) {
     if (body.categoryImage === false) {
-      if (existing.categoryImagePublicId) previousImagePublicId = existing.categoryImagePublicId;
-      updates.categoryImagePublicId = null;
-      updates.categoryImageSecureUrl = null;
+      if (existing.categoryImage?.publicId) {
+        previousImagePublicId = existing.categoryImage.publicId;
+      }
+      $unset.categoryImage = '';
     } else {
-      previousImagePublicId = existing.categoryImagePublicId ?? undefined;
+      previousImagePublicId = existing.categoryImage?.publicId;
       const imageParsed = parseCategoryImageUpload(body.categoryImage);
       if (!imageParsed.ok) return apiError(400, imageParsed.error);
       try {
         const uploaded = await uploadCategoryImage(id, imageParsed.data.dataUri);
         orphanNewImagePublicId = uploaded.publicId;
-        updates.categoryImagePublicId = uploaded.publicId;
-        updates.categoryImageSecureUrl = uploaded.secureUrl;
+        $set.categoryImage = { publicId: uploaded.publicId, secureUrl: uploaded.secureUrl };
       } catch (err) {
         console.error(err);
         return apiError(502, 'Image upload failed');
@@ -54,16 +50,24 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  if (Object.keys(updates).length === 0) {
+  const mongoUpdate: Record<string, unknown> = {};
+  if (Object.keys($set).length > 0) mongoUpdate.$set = $set;
+  if (Object.keys($unset).length > 0) mongoUpdate.$unset = $unset;
+  if (Object.keys(mongoUpdate).length === 0) {
     return apiError(400, 'No valid fields to update');
   }
 
-  const [updated] = await db.update(categories).set(updates).where(eq(categories.id, id)).returning();
-  if (!updated) {
+  try {
+    const doc = await Category.findByIdAndUpdate(id, mongoUpdate, { returnDocument: 'after', runValidators: true });
+    if (!doc) {
+      if (orphanNewImagePublicId) void destroyImageByPublicId(orphanNewImagePublicId);
+      return apiError(404, 'Category not found');
+    }
+    if (previousImagePublicId) void destroyImageByPublicId(previousImagePublicId);
+    return doc;
+  } catch (err: unknown) {
     if (orphanNewImagePublicId) void destroyImageByPublicId(orphanNewImagePublicId);
-    return apiError(404, 'Category not found');
+    if (isDuplicateKeyError(err)) return apiError(409, 'A category with this name already exists');
+    throw err;
   }
-  if (previousImagePublicId) void destroyImageByPublicId(previousImagePublicId);
-
-  return toCategoryModel(updated);
 });

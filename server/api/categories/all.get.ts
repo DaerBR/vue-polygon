@@ -1,9 +1,9 @@
-import { asc } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { categories } from '../../db/schema';
-import { toCategoryModel } from '../../utils/serializers';
+import { connectDB } from '../../utils/db';
+import { Category } from '../../models/Category';
+import { renameMongoIdsForClient } from '../../utils/renameMongoIdsForClient';
 
 export default defineEventHandler(async () => {
-  const rows = await db.select().from(categories).orderBy(asc(categories.name));
-  return rows.map(toCategoryModel);
+  await connectDB();
+  const data = await Category.find().sort({ name: 1 }).lean();
+  return renameMongoIdsForClient(data);
 });

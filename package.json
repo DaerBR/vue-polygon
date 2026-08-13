@@ -7,19 +7,16 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.4",
     "@primeuix/themes": "^3.0.0-rc.1",
     "@tailwindcss/vite": "^4.3.2",
     "@vee-validate/zod": "^4.15.1",
     "@vite-pwa/nuxt": "^1.1.1",
     "cloudinary": "^2.10.0",
     "dotenv": "^17.4.2",
-    "drizzle-orm": "^0.45.2",
+    "mongoose": "^9.9.2",
     "nuxt": "^4.4.8",
     "nuxt-aos": "^1.2.6",
     "nuxt-auth-utils": "^0.5.30",
@@ -34,7 +31,7 @@
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^5.0.0-rc.1",
-    "drizzle-kit": "^0.31.10",
+    "@types/node": "^26.2.0",
     "tsx": "^4.23.1"
   }
 }

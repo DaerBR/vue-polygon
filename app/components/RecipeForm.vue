@@ -7,6 +7,7 @@ import {
   type RecipeFormValues,
 } from '~/utils/recipeFormValidation';
 import { getBase64OfFile } from '~/utils/getBase64OfFile';
+import FormTextField from '~/components/FormTextField.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -95,12 +96,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         <div class="flex flex-col mt-6">
           <FieldsGroupTitle title="Інгредієнти" />
           <div class="flex flex-col gap-2 mt-2">
-            <FormField
+            <FormTextField
               v-for="(field, index) in ingredientFields"
               :key="field.key"
               :name="`ingredients[${index}].text`"
-              label='Опис (напр. "300 гр пшеничного борошна")'
+              :placeholder="`Опис (напр. 300 гр пшеничного борошна)`"
               :show-delete="index !== 0"
+              label=""
               @remove="removeIngredient(index)"
             />
           </div>
@@ -118,13 +120,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mt-6">
-          <FormField name="sourceUrl" label="Посилання" />
+          <FormTextField name="sourceUrl" label="Посилання" placeholder="Посилання на оригінал" />
         </div>
       </div>
 
       <div class="flex flex-col ml-6 w-full max-sm:ml-0">
         <div class="mb-6">
-          <FormField name="name" label="Назва рецепту" />
+          <FormTextField name="name" label="Назва рецепту" placeholder="Введіть назву" />
         </div>
 
         <div class="mb-6">
@@ -137,13 +139,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mb-6">
-          <FormField name="description" label="Опис" multiline :rows="3" />
+          <FormTextField name="description" label="Опис" multiline :rows="3" placeholder="Короткий опис" />
         </div>
 
         <div class="mb-6">
           <FieldsGroupTitle title="Покрокова інструкція" />
           <div class="flex flex-col gap-4 mt-2">
-            <FormField
+            <FormTextField
               v-for="(field, index) in stepFields"
               :key="field.key"
               :name="`steps[${index}].stepDescription`"

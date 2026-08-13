@@ -1,14 +1,13 @@
-import { eq } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { categories } from '../../db/schema';
-import { toCategoryModel } from '../../utils/serializers';
+import { connectDB } from '../../utils/db';
+import { Category } from '../../models/Category';
 import { apiError } from '../../utils/apiError';
-import { parseCategoryImageUpload } from '../../utils/requestValidation';
+import { isDuplicateKeyError, parseCategoryImageUpload } from '../../utils/requestValidation';
 import { uploadCategoryImage } from '../../utils/cloudinary';
 import { requireLogin } from '../../utils/requireLogin';
 
 export default defineEventHandler(async (event) => {
   await requireLogin(event);
+  await connectDB();
 
   const body = await readBody<Record<string, unknown>>(event);
   const name = body.name;
@@ -16,37 +15,34 @@ export default defineEventHandler(async (event) => {
     return apiError(400, 'name is required');
   }
 
-  const duplicate = await db.query.categories.findFirst({ where: eq(categories.name, name.trim()) });
-  if (duplicate) {
-    return apiError(409, 'A category with this name already exists');
+  let doc;
+  try {
+    doc = await Category.create({ name: name.trim() });
+  } catch (err: unknown) {
+    if (isDuplicateKeyError(err)) {
+      return apiError(409, 'A category with this name already exists');
+    }
+    throw err;
   }
-
-  const [created] = await db.insert(categories).values({ name: name.trim() }).returning();
-  if (!created) return apiError(500, 'Failed to create category');
 
   const rawImage = body.categoryImage;
   if (rawImage !== undefined && rawImage !== null) {
     const imageParsed = parseCategoryImageUpload(rawImage);
     if (!imageParsed.ok) {
-      await db.delete(categories).where(eq(categories.id, created.id));
+      await Category.findByIdAndDelete(doc._id);
       return apiError(400, imageParsed.error);
     }
     try {
-      const uploaded = await uploadCategoryImage(created.id, imageParsed.data.dataUri);
-      const [withImage] = await db
-        .update(categories)
-        .set({ categoryImagePublicId: uploaded.publicId, categoryImageSecureUrl: uploaded.secureUrl })
-        .where(eq(categories.id, created.id))
-        .returning();
-      setResponseStatus(event, 201);
-      return toCategoryModel(withImage!);
+      const uploaded = await uploadCategoryImage(String(doc._id), imageParsed.data.dataUri);
+      doc.categoryImage = { publicId: uploaded.publicId, secureUrl: uploaded.secureUrl };
+      await doc.save();
     } catch (err) {
       console.error(err);
-      await db.delete(categories).where(eq(categories.id, created.id));
+      await Category.findByIdAndDelete(doc._id);
       return apiError(502, 'Image upload failed');
     }
   }
 
   setResponseStatus(event, 201);
-  return toCategoryModel(created);
+  return doc;
 });

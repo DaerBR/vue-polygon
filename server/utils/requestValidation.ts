@@ -1,3 +1,5 @@
+import { isValidObjectId } from './mongo';
+
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const MAX_INGREDIENT_LENGTH = 255;
 
@@ -68,15 +70,18 @@ const parseImageUpload = (raw: unknown, field: string): ParseImageUploadResult =
 };
 
 export const parseRecipeImageUpload = (raw: unknown): ParseImageUploadResult => parseImageUpload(raw, 'recipeImage');
+
 export const parseCategoryImageUpload = (raw: unknown): ParseImageUploadResult =>
   parseImageUpload(raw, 'categoryImage');
 
 export const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+export const isDuplicateKeyError = (err: unknown): boolean =>
+  typeof err === 'object' && err !== null && 'code' in err && (err as { code: number }).code === 11000;
+
 export type ParsedRecipeIngredient = { text: string };
 export type ParseRecipeIngredientsResult =
-  | { ok: true; value: ParsedRecipeIngredient[] | undefined }
-  | { ok: false; error: string };
+  { ok: true; value: ParsedRecipeIngredient[] | undefined } | { ok: false; error: string };
 
 /** Omit (undefined/null) means no ingredients in the payload; create/update replace the full list when present. */
 export const parseRecipeIngredients = (raw: unknown): ParseRecipeIngredientsResult => {
@@ -115,7 +120,7 @@ export const parseRecipeCategories = (raw: unknown): ParseRecipeCategoriesResult
   const unique = new Set<string>();
   for (let i = 0; i < raw.length; i++) {
     const el = raw[i];
-    if (typeof el !== 'string' || !el.trim()) {
+    if (typeof el !== 'string' || !isValidObjectId(el)) {
       return { ok: false, error: `${field}[${i}] must be a valid id` };
     }
     unique.add(el);

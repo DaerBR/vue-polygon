@@ -1,24 +1,16 @@
-import { asc, eq } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { recipeIngredients, recipeSteps, recipes } from '../../db/schema';
-import { toRecipeDetailModel } from '../../utils/serializers';
+import { connectDB } from '../../utils/db';
+import { Recipe } from '../../models/Recipe';
 import { apiError } from '../../utils/apiError';
+import { isValidObjectId } from '../../utils/mongo';
 
 export default defineEventHandler(async (event) => {
+  await connectDB();
+
   const id = getRouterParam(event, 'id');
-  if (!id) return apiError(400, 'Invalid recipe id');
+  if (!id || !isValidObjectId(id)) return apiError(400, 'Invalid recipe id');
 
-  const row = await db.query.recipes.findFirst({
-    where: eq(recipes.id, id),
-    with: {
-      recipeCategories: { with: { category: true } },
-      ingredients: { orderBy: asc(recipeIngredients.position) },
-      steps: { orderBy: asc(recipeSteps.position) },
-      createdByUser: true,
-    },
-  });
+  const doc = await Recipe.findById(id).populate('categories', 'name').populate('createdBy', 'displayName email');
+  if (!doc) return apiError(404, 'Recipe not found');
 
-  if (!row) return apiError(404, 'Recipe not found');
-
-  return toRecipeDetailModel(row);
+  return doc;
 });

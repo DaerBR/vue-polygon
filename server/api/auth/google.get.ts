@@ -1,6 +1,5 @@
-import { eq } from 'drizzle-orm';
-import { db } from '../../utils/db';
-import { users } from '../../db/schema';
+import { connectDB } from '../../utils/db';
+import { User } from '../../models/User';
 import { isEmailAllowed } from '../../utils/allowedEmails';
 import { apiError } from '../../utils/apiError';
 
@@ -31,24 +30,23 @@ export default defineOAuthGoogleEventHandler({
       return apiError(403, 'Your Google account is not authorized to use this application.');
     }
 
+    await connectDB();
+
     const googleId = String(googleUser.sub);
     const displayName = googleUser.name?.trim() || email;
 
-    let dbUser = await db.query.users.findFirst({ where: eq(users.googleId, googleId) });
+    let dbUser = await User.findOne({ googleId });
 
     if (!dbUser) {
-      const existingByEmail = await db.query.users.findFirst({ where: eq(users.email, email) });
+      const existingByEmail = await User.findOne({ email });
       if (existingByEmail) {
-        await db.update(users).set({ googleId, displayName }).where(eq(users.id, existingByEmail.id));
-        dbUser = { ...existingByEmail, googleId, displayName };
+        existingByEmail.googleId = googleId;
+        existingByEmail.displayName = displayName;
+        await existingByEmail.save();
+        dbUser = existingByEmail;
       } else {
-        const [created] = await db.insert(users).values({ googleId, displayName, email }).returning();
-        dbUser = created;
+        dbUser = await User.create({ googleId, displayName, email });
       }
-    }
-
-    if (!dbUser) {
-      return apiError(500, 'Failed to create user');
     }
 
     await setUserSession(event, {
