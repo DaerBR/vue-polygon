@@ -95,7 +95,7 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         <div class="flex flex-col mt-6">
           <FieldsGroupTitle title="Інгредієнти" />
           <div class="flex flex-col gap-2 mt-2">
-            <FormField
+            <FormTextField
               v-for="(field, index) in ingredientFields"
               :key="field.key"
               :name="`ingredients[${index}].text`"
@@ -118,13 +118,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mt-6">
-          <FormField name="sourceUrl" label="Посилання" />
+          <FormTextField name="sourceUrl" label="Посилання" />
         </div>
       </div>
 
       <div class="flex flex-col ml-6 w-full max-sm:ml-0">
         <div class="mb-6">
-          <FormField name="name" label="Назва рецепту" />
+          <FormTextField name="name" label="Назва рецепту" />
         </div>
 
         <div class="mb-6">
@@ -137,13 +137,13 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
         </div>
 
         <div class="mb-6">
-          <FormField name="description" label="Опис" multiline :rows="3" />
+          <FormTextField name="description" label="Опис" multiline :rows="3" />
         </div>
 
         <div class="mb-6">
           <FieldsGroupTitle title="Покрокова інструкція" />
           <div class="flex flex-col gap-4 mt-2">
-            <FormField
+            <FormTextField
               v-for="(field, index) in stepFields"
               :key="field.key"
               :name="`steps[${index}].stepDescription`"

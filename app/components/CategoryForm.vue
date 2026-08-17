@@ -70,7 +70,7 @@ const handleFormSubmit = handleSubmit(async (formValues) => {
       </div>
       <div class="flex flex-col ml-6 w-full max-sm:ml-0">
         <div class="mb-6">
-          <FormField name="name" label="Назва категорії" />
+          <FormTextField name="name" label="Назва категорії" />
         </div>
       </div>
     </div>
