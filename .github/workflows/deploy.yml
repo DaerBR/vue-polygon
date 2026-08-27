@@ -1,0 +1,37 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [drizzle_db]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Trust server host key
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Sync build output to server
+        run: rsync -az --delete .output/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/.output/
+
+      - name: Restart app
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 restart polygon-30"
