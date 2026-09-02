@@ -8,7 +8,13 @@
     @page="onPage"
   >
     <template
-      #container="{ page: currentPageIndex, pageCount, prevPageCallback, nextPageCallback, changePageCallback }"
+      #container="{
+        page: currentPageIndex,
+        pageCount: slotPageCount,
+        prevPageCallback,
+        nextPageCallback,
+        changePageCallback,
+      }"
     >
       <div class="flex justify-center items-center gap-2">
         <button
@@ -46,7 +52,7 @@
         <button
           type="button"
           class="min-w-10 w-10 h-10 p-1 flex items-center justify-center border border-dual-grey-100 rounded shadow-xs text-dual-grey-600 hover:border-dual-grey-300 disabled:opacity-40 disabled:pointer-events-none"
-          :disabled="!pageCount || currentPageIndex >= pageCount - 1"
+          :disabled="!slotPageCount || currentPageIndex >= slotPageCount - 1"
           @click="nextPageCallback"
         >
           <IconChevronRight :size="10" />
