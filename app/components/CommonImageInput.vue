@@ -27,10 +27,11 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, useId, watch } from 'vue';
 
-const props = withDefaults(
-  defineProps<{ width?: number; height?: number; initialPreviewUrl?: string | null }>(),
-  { width: 400, height: 350, initialPreviewUrl: null },
-);
+const props = withDefaults(defineProps<{ width?: number; height?: number; initialPreviewUrl?: string | null }>(), {
+  width: 400,
+  height: 350,
+  initialPreviewUrl: null,
+});
 
 const modelValue = defineModel<File | null>({ default: null });
 

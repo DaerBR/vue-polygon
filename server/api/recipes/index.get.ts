@@ -16,11 +16,18 @@ export default defineEventHandler(async (event) => {
   const categoriesQueryRaw = query.categories;
   const categoryIdsFromQuery =
     typeof categoriesQueryRaw === 'string' && categoriesQueryRaw.trim()
-      ? [...new Set(categoriesQueryRaw.split(',').map((s) => s.trim()).filter(Boolean))]
+      ? [
+          ...new Set(
+            categoriesQueryRaw
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean),
+          ),
+        ]
       : [];
 
   const orderRaw = typeof query.order === 'string' ? query.order.trim().toLowerCase() : '';
-  let updatedAtSort: 1 | -1 = -1;
+  let updatedAtSort: 1 | -1;
   if (orderRaw === '' || orderRaw === 'desc') {
     updatedAtSort = -1;
   } else if (orderRaw === 'asc') {

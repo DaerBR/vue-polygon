@@ -39,7 +39,7 @@ const parseImageUpload = (raw: unknown, field: string): ParseImageUploadResult =
   }
 
   let payload = base64Content.trim();
-  let mime: string | null = null;
+  let mime: string;
   const dataUriMatch = /^data:([^;]+);base64,(.+)$/is.exec(payload);
   if (dataUriMatch) {
     mime = dataUriMatch[1]!.toLowerCase().trim();
@@ -49,7 +49,7 @@ const parseImageUpload = (raw: unknown, field: string): ParseImageUploadResult =
     mime = mimeFromExt;
   }
 
-  if (mime && !isAllowedImageMime(mime)) {
+  if (!isAllowedImageMime(mime)) {
     return { ok: false, error: `${field} must be JPEG or PNG` };
   }
 
@@ -61,12 +61,7 @@ const parseImageUpload = (raw: unknown, field: string): ParseImageUploadResult =
     return { ok: false, error: `${field} must be at most 5 MB` };
   }
 
-  const finalMime = mime ?? mimeFromExt;
-  if (!isAllowedImageMime(finalMime)) {
-    return { ok: false, error: `${field} must be JPEG or PNG` };
-  }
-
-  return { ok: true, data: { dataUri: `data:${finalMime};base64,${payload}` } };
+  return { ok: true, data: { dataUri: `data:${mime};base64,${payload}` } };
 };
 
 export const parseRecipeImageUpload = (raw: unknown): ParseImageUploadResult => parseImageUpload(raw, 'recipeImage');
