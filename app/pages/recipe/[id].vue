@@ -2,7 +2,7 @@
   <div v-if="status === 'pending'">Зачекай-но...</div>
   <div v-else-if="status === 'success' && recipeDetails">
     <PageTitle :title="recipeDetails.name" with-return-button>
-      <template #controls v-if="isLoggedIn">
+      <template v-if="isLoggedIn" #controls>
         <CommonButton variant="secondary" @click="navigateTo(`/edit-recipe/${recipeDetails.id}`)"
           >Редагувати</CommonButton
         >
@@ -36,7 +36,7 @@
       <div class="flex flex-col mb-5" data-aos="flip-left" data-aos-duration="1000">
         <FieldsGroupTitle title="Інгредієнти" />
         <ul class="list-[circle] pl-6 list-outside mt-4">
-          <li class="mb-3" v-for="ingredient in recipeDetails.ingredients" :key="ingredient.id">
+          <li v-for="ingredient in recipeDetails.ingredients" :key="ingredient.id" class="mb-3">
             {{ ingredient.text }}
           </li>
         </ul>
@@ -44,11 +44,13 @@
       <div class="flex flex-col gap-3 mb-5" data-aos="flip-down" data-aos-duration="1000">
         <FieldsGroupTitle title="Інструкція" />
         <ol class="list-decimal list-outside pl-6">
-          <li v-for="step in recipeDetails.steps" class="mb-3 text-justify">{{ step.stepDescription }}</li>
+          <li v-for="step in recipeDetails.steps" :key="step.id" class="mb-3 text-justify">
+            {{ step.stepDescription }}
+          </li>
         </ol>
       </div>
 
-      <div class="line-clamp-2" v-if="recipeDetails.sourceUrl">
+      <div v-if="recipeDetails.sourceUrl" class="line-clamp-2">
         <span class="text-paragraph-m text-dual-grey-900 font-semibold mr-1">Посилання:</span>
         <a :href="recipeDetails.sourceUrl">{{ recipeDetails.sourceUrl }}</a>
       </div>

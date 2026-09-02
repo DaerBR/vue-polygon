@@ -14,20 +14,25 @@
 import { computed } from 'vue';
 import Button from 'primevue/button';
 
-type Variant = 'primary' | 'secondary' | 'outlined-neutral' | 'outlined-primary' | 'outlined-success' | 'outlined-error';
+type Variant =
+  'primary' | 'secondary' | 'outlined-neutral' | 'outlined-primary' | 'outlined-success' | 'outlined-error';
 
-const props = withDefaults(defineProps<{
-  variant?: Variant;
-  fullWidth?: boolean;
-  isDisabled?: boolean;
-  isBusy?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-}>(), {
-  variant: 'primary',
-  type: 'button',
-});
+const props = withDefaults(
+  defineProps<{
+    variant?: Variant;
+    fullWidth?: boolean;
+    isDisabled?: boolean;
+    isBusy?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+  }>(),
+  {
+    variant: 'primary',
+    type: 'button',
+  },
+);
 
-const baseClasses = 'cursor-pointer font-medium min-w-16 rounded px-7 h-10 flex items-center justify-center text-paragraph-s transition-colors duration-[250ms] box-border disabled:cursor-default disabled:pointer-events-none';
+const baseClasses =
+  'cursor-pointer font-medium min-w-16 rounded px-7 h-10 flex items-center justify-center text-paragraph-s transition-colors duration-[250ms] box-border disabled:cursor-default disabled:pointer-events-none';
 
 const variantClasses = computed(() => {
   switch (props.variant) {
@@ -43,6 +48,8 @@ const variantClasses = computed(() => {
       return 'bg-white text-dual-green-600 border border-dual-green-600 shadow-xs hover:bg-dual-green-100 active:border-dual-green-300 disabled:text-dual-green-300';
     case 'outlined-error':
       return 'bg-white text-dual-red-600 border border-dual-red-600 shadow-xs hover:bg-dual-red-100 active:border-dual-red-300 disabled:text-dual-red-300';
+    default:
+      return 'bg-dual-orange-500 text-white hover:bg-dual-orange-400 active:bg-dual-orange-700 disabled:bg-dual-grey-100';
   }
 });
 </script>

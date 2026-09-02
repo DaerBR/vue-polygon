@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { CategoryModel, RecipeDetailModel } from '~/types/types';
 import type { CategoryFormSubmitPayload, CategoryFormValues } from '~/utils/categoryFormValidation';
-import type { RecipeFormSubmitPayload, RecipeFormValues } from '~/utils/recipeFormValidation';
 
 definePageMeta({
   middleware: 'auth-guard',
@@ -59,7 +57,7 @@ const handleDelete = async () => {
       </template>
     </PageTitle>
     <CategoryForm
-      isEdit
+      is-edit
       :initial-values="initialValues"
       :initial-image-url="categoryDetails.categoryImage?.secureUrl"
       :on-submit="handleUpdate"

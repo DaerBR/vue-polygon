@@ -62,7 +62,7 @@ const handleDelete = async () => {
     </PageTitle>
 
     <RecipeForm
-      isEdit
+      is-edit
       :initial-values="initialValues"
       :initial-image-url="recipeDetails.recipeImage?.secureUrl"
       :on-submit="handleUpdate"

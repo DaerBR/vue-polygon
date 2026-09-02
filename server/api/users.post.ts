@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   try {
     const [createdUser] = await db.insert(usersTestTable).values({ name: body.name, email: body.email }).returning();
     return createdUser;
-  } catch (error) {
+  } catch {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create user.',

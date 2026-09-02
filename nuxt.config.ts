@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ['@primevue/nuxt-module', 'nuxt-aos', '@vite-pwa/nuxt'],
+  modules: ['@primevue/nuxt-module', 'nuxt-aos', '@vite-pwa/nuxt', '@nuxt/eslint'],
   primevue: {/* Configuration */},
   pwa: {
     registerType: 'autoUpdate',
