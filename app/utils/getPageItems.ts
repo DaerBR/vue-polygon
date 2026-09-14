@@ -17,11 +17,13 @@ export const getPageItems = (currentPage: number, totalPages: number): PageItem[
 
   if (currentPage < EDGE_SIZE) {
     const leading = Array.from({ length: edge }, (_, i) => i + 1);
+
     return [...leading, 'ellipsis', last];
   }
 
   if (currentPage > endZoneStart) {
     const trailing = Array.from({ length: edge }, (_, i) => last - edge + 1 + i);
+
     return [1, 'ellipsis', ...trailing];
   }
 

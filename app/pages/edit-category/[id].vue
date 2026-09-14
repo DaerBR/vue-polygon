@@ -18,6 +18,7 @@ const categoryDetails = computed(() => categories.value.find((category) => categ
 
 const initialValues = computed<CategoryFormValues | undefined>(() => {
   if (!categoryDetails.value) return undefined;
+
   return {
     name: categoryDetails.value.name,
     categoryImage: null,

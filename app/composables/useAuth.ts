@@ -1,7 +1,9 @@
 import type { UserModel } from '~/types/types';
 
 export const useAuth = () => {
-  const { public: { apiUrl } } = useRuntimeConfig();
+  const {
+    public: { apiUrl },
+  } = useRuntimeConfig();
 
   const user = useState<UserModel | null>('auth-user', () => null);
   const isLoggedIn = computed(() => user.value !== null);
@@ -44,5 +46,13 @@ export const useAuth = () => {
     user.value = null;
   };
 
-  return { user, isLoggedIn, areUserDataFetched, isLoading, fetchUser, login, logout };
+  return {
+    user,
+    isLoggedIn,
+    areUserDataFetched,
+    isLoading,
+    fetchUser,
+    login,
+    logout,
+  };
 };

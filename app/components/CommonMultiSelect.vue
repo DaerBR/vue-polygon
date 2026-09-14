@@ -99,6 +99,7 @@ const isItemSelected = (option: SelectOption) => modelValue.value.includes(optio
 const getLabel = () => {
   if (modelValue.value.length === 0) return '';
   const first = props.options.find((option) => option.value === modelValue.value[0])?.label ?? modelValue.value[0];
+
   return modelValue.value.length > 1 ? `${first} (+${modelValue.value.length - 1})` : first;
 };
 
