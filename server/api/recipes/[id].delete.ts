@@ -17,8 +17,9 @@ export default defineEventHandler(async (event) => {
 
   await Recipe.findByIdAndDelete(id);
   const imagePublicId = existing.recipeImage?.publicId;
-  if (imagePublicId) void destroyImageByPublicId(imagePublicId);
+  if (imagePublicId) destroyImageByPublicId(imagePublicId);
 
   setResponseStatus(event, 204);
+
   return null;
 });

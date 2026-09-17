@@ -32,7 +32,9 @@ import type { RecipeTableModel, RecipesPaginationModel } from '~/types/types';
 const MIN_QUERY_LENGTH = 3;
 const DEBOUNCE_MS = 400;
 
-const { public: { apiUrl } } = useRuntimeConfig();
+const {
+  public: { apiUrl },
+} = useRuntimeConfig();
 
 const selectedRecipe = ref<RecipeTableModel | string>('');
 const suggestions = ref<RecipeTableModel[]>([]);
@@ -57,6 +59,7 @@ const onComplete = (event: { query: string }) => {
   searchTerm = event.query;
   if (event.query.length < MIN_QUERY_LENGTH) {
     suggestions.value = [];
+
     return;
   }
   if (debounceTimer) clearTimeout(debounceTimer);

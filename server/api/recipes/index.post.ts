@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   await connectDB();
 
   const body = await readBody<Record<string, unknown>>(event);
-  const name = body.name;
+  const { name } = body;
   if (typeof name !== 'string' || !name.trim()) {
     return apiError(400, 'name is required');
   }
@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
     const imageParsed = parseRecipeImageUpload(rawRecipeImage);
     if (!imageParsed.ok) {
       await Recipe.findByIdAndDelete(doc._id);
+
       return apiError(400, imageParsed.error);
     }
     try {
@@ -61,10 +62,12 @@ export default defineEventHandler(async (event) => {
     } catch (err) {
       console.error(err);
       await Recipe.findByIdAndDelete(doc._id);
+
       return apiError(502, 'Image upload failed');
     }
   }
 
   setResponseStatus(event, 201);
+
   return doc;
 });

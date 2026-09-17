@@ -62,10 +62,12 @@ export default defineOAuthGoogleEventHandler({
         createdAt: dbUser.createdAt,
       },
     });
+
     return send(event, html, 'text/html');
   },
   onError(_event, error) {
     console.error('Google OAuth error', error);
+
     return apiError(500, 'Google authentication failed');
   },
 });

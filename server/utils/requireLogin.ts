@@ -14,5 +14,7 @@ export const requireLogin = async (event: H3Event): Promise<AuthenticatedUser> =
   if (!session.user) {
     throw createError({ statusCode: 401, statusMessage: 'Please log in to access this page!' });
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- see note above
   return session.user as AuthenticatedUser;
 };

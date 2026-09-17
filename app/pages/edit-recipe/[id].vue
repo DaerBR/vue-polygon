@@ -16,6 +16,7 @@ const { data: recipeDetails, status } = await useFetch<RecipeDetailModel>(`${api
 
 const initialValues = computed<RecipeFormValues | undefined>(() => {
   if (!recipeDetails.value) return undefined;
+
   return {
     name: recipeDetails.value.name,
     categories: recipeDetails.value.categories.map((category) => category.id),

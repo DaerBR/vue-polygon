@@ -90,6 +90,7 @@ export default defineEventHandler(async (event) => {
         $set.recipeImage = { publicId: uploaded.publicId, secureUrl: uploaded.secureUrl };
       } catch (err) {
         console.error(err);
+
         return apiError(502, 'Image upload failed');
       }
     }
@@ -106,11 +107,12 @@ export default defineEventHandler(async (event) => {
 
   const doc = await Recipe.findByIdAndUpdate(id, mongoUpdate, { returnDocument: 'after', runValidators: true });
   if (!doc) {
-    if (orphanNewImagePublicId) void destroyImageByPublicId(orphanNewImagePublicId);
+    if (orphanNewImagePublicId) destroyImageByPublicId(orphanNewImagePublicId);
+
     return apiError(404, 'Recipe not found');
   }
 
-  if (previousImagePublicId) void destroyImageByPublicId(previousImagePublicId);
+  if (previousImagePublicId) destroyImageByPublicId(previousImagePublicId);
 
   return doc;
 });

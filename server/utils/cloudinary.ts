@@ -28,6 +28,7 @@ export const uploadRecipeImage = async (recipeId: string, dataUri: string): Prom
     overwrite: false,
     unique_filename: true,
   });
+
   return { publicId: result.public_id, secureUrl: result.secure_url };
 };
 
@@ -39,6 +40,7 @@ export const uploadCategoryImage = async (categoryId: string, dataUri: string): 
     overwrite: false,
     unique_filename: true,
   });
+
   return { publicId: result.public_id, secureUrl: result.secure_url };
 };
 

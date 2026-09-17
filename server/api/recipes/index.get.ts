@@ -43,10 +43,8 @@ export default defineEventHandler(async (event) => {
     filter.name = { $regex: escapeRegex(search), $options: 'i' };
   }
   if (categoryIdsFromQuery.length > 0) {
-    for (const cid of categoryIdsFromQuery) {
-      if (!isValidObjectId(cid)) {
-        return apiError(400, 'categories query must be comma-separated valid ObjectIds');
-      }
+    if (!categoryIdsFromQuery.every(isValidObjectId)) {
+      return apiError(400, 'categories query must be comma-separated valid ObjectIds');
     }
     filter.categories = { $in: categoryIdsFromQuery };
   }

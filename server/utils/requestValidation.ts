@@ -9,6 +9,7 @@ const extensionToMime = (ext: string): string | null => {
   const e = ext.toLowerCase();
   if (e === 'jpg' || e === 'jpeg') return 'image/jpeg';
   if (e === 'png') return 'image/png';
+
   return null;
 };
 
@@ -19,8 +20,8 @@ const parseImageUpload = (raw: unknown, field: string): ParseImageUploadResult =
     return { ok: false, error: `${field} must be an object` };
   }
   const obj = raw as Record<string, unknown>;
-  const nameWithExtension = obj.nameWithExtension;
-  const base64Content = obj.base64Content;
+  const { nameWithExtension } = obj;
+  const { base64Content } = obj;
   if (typeof nameWithExtension !== 'string' || !nameWithExtension.trim()) {
     return { ok: false, error: `${field}.nameWithExtension is required` };
   }
@@ -74,7 +75,9 @@ export const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()
 export const isDuplicateKeyError = (err: unknown): boolean =>
   typeof err === 'object' && err !== null && 'code' in err && (err as { code: number }).code === 11000;
 
-export type ParsedRecipeIngredient = { text: string };
+export interface ParsedRecipeIngredient {
+  text: string;
+}
 export type ParseRecipeIngredientsResult =
   { ok: true; value: ParsedRecipeIngredient[] | undefined } | { ok: false; error: string };
 
@@ -85,7 +88,7 @@ export const parseRecipeIngredients = (raw: unknown): ParseRecipeIngredientsResu
   if (!Array.isArray(raw)) return { ok: false, error: `${field} must be an array` };
 
   const value: ParsedRecipeIngredient[] = [];
-  for (let i = 0; i < raw.length; i++) {
+  for (let i = 0; i < raw.length; i += 1) {
     const el = raw[i];
     if (el === null || typeof el !== 'object' || Array.isArray(el)) {
       return { ok: false, error: `${field}[${i}] must be an object` };
@@ -100,6 +103,7 @@ export const parseRecipeIngredients = (raw: unknown): ParseRecipeIngredientsResu
     }
     value.push({ text });
   }
+
   return { ok: true, value };
 };
 
@@ -113,17 +117,20 @@ export const parseRecipeCategories = (raw: unknown): ParseRecipeCategoriesResult
   if (raw.length < 1) return { ok: false, error: 'At least one category is required' };
 
   const unique = new Set<string>();
-  for (let i = 0; i < raw.length; i++) {
+  for (let i = 0; i < raw.length; i += 1) {
     const el = raw[i];
     if (typeof el !== 'string' || !isValidObjectId(el)) {
       return { ok: false, error: `${field}[${i}] must be a valid id` };
     }
     unique.add(el);
   }
+
   return { ok: true, value: [...unique] };
 };
 
-export type ParsedRecipeStep = { stepDescription: string };
+export interface ParsedRecipeStep {
+  stepDescription: string;
+}
 export type ParseRecipeStepsResult = { ok: true; value: ParsedRecipeStep[] } | { ok: false; error: string };
 
 /** Non-empty array of `{ stepDescription }`; create/update always replace steps. */
@@ -134,7 +141,7 @@ export const parseRecipeSteps = (raw: unknown): ParseRecipeStepsResult => {
   if (raw.length < 1) return { ok: false, error: `${field} must contain at least one entry` };
 
   const value: ParsedRecipeStep[] = [];
-  for (let i = 0; i < raw.length; i++) {
+  for (let i = 0; i < raw.length; i += 1) {
     const el = raw[i];
     if (el === null || typeof el !== 'object' || Array.isArray(el)) {
       return { ok: false, error: `${field}[${i}] must be an object` };
@@ -145,5 +152,6 @@ export const parseRecipeSteps = (raw: unknown): ParseRecipeStepsResult => {
     }
     value.push({ stepDescription: descRaw.trim() });
   }
+
   return { ok: true, value };
 };

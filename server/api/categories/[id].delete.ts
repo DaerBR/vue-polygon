@@ -25,8 +25,9 @@ export default defineEventHandler(async (event) => {
 
   await Category.findByIdAndDelete(id);
   const imagePublicId = existing.categoryImage?.publicId;
-  if (imagePublicId) void destroyImageByPublicId(imagePublicId);
+  if (imagePublicId) destroyImageByPublicId(imagePublicId);
 
   setResponseStatus(event, 204);
+
   return null;
 });

@@ -24,6 +24,7 @@
     "nuxt": "^4.4.8",
     "nuxt-aos": "^1.2.6",
     "nuxt-auth-utils": "^0.5.30",
+    "ofetch": "^1.5.1",
     "prettier": "^3.9.4",
     "primevue": "^5.0.0-rc.1",
     "tailwindcss": "^4.3.2",
@@ -36,8 +37,10 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
     "@primevue/nuxt-module": "^5.0.0-rc.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.2.0",
     "eslint": "^10.9.1",
+    "eslint-config-airbnb-extended": "^3.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.4.1",
     "tsx": "^4.23.1",
@@ -49,5 +52,10 @@
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ]
+  },
+  "overrides": {
+    "eslint-config-airbnb-extended": {
+      "eslint": "$eslint"
+    }
   }
 }

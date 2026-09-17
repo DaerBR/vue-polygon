@@ -31,7 +31,7 @@ export default defineNuxtConfig({
       apiUrl: 'http://localhost:5174',
     },
   },
-  css: ['./app/assets/css/main.css'],
+  css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },

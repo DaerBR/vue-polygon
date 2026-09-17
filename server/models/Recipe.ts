@@ -46,7 +46,12 @@ const recipeImageSchema = new Schema<RecipeImage>(
 
 const recipeIngredientSchema = new Schema<Pick<RecipeIngredient, 'text'>>(
   {
-    text: { type: String, required: true, trim: true, maxlength: 255 },
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255,
+    },
   },
   { _id: true },
 );

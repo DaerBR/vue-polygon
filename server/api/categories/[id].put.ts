@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
         $set.categoryImage = { publicId: uploaded.publicId, secureUrl: uploaded.secureUrl };
       } catch (err) {
         console.error(err);
+
         return apiError(502, 'Image upload failed');
       }
     }
@@ -60,13 +61,15 @@ export default defineEventHandler(async (event) => {
   try {
     const doc = await Category.findByIdAndUpdate(id, mongoUpdate, { returnDocument: 'after', runValidators: true });
     if (!doc) {
-      if (orphanNewImagePublicId) void destroyImageByPublicId(orphanNewImagePublicId);
+      if (orphanNewImagePublicId) destroyImageByPublicId(orphanNewImagePublicId);
+
       return apiError(404, 'Category not found');
     }
-    if (previousImagePublicId) void destroyImageByPublicId(previousImagePublicId);
+    if (previousImagePublicId) destroyImageByPublicId(previousImagePublicId);
+
     return doc;
   } catch (err: unknown) {
-    if (orphanNewImagePublicId) void destroyImageByPublicId(orphanNewImagePublicId);
+    if (orphanNewImagePublicId) destroyImageByPublicId(orphanNewImagePublicId);
     if (isDuplicateKeyError(err)) return apiError(409, 'A category with this name already exists');
     throw err;
   }

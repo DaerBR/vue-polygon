@@ -1,14 +1,17 @@
 import mongoose from 'mongoose';
 
 declare global {
-  var __mongoosePromise: Promise<typeof mongoose> | undefined;
+  // TypeScript's global augmentation requires `var`, not `let`/`const`.
+  // eslint-disable-next-line vars-on-top
+  var globalMongoosePromise: Promise<typeof mongoose> | undefined;
 }
 
 /** Idempotent — safe to call at the top of every handler that touches a model; reused across dev hot-reloads. */
 export const connectDB = (): Promise<typeof mongoose> => {
-  if (!globalThis.__mongoosePromise) {
+  if (!globalThis.globalMongoosePromise) {
     const { mongoUri } = useRuntimeConfig();
-    globalThis.__mongoosePromise = mongoose.connect(mongoUri);
+    globalThis.globalMongoosePromise = mongoose.connect(mongoUri);
   }
-  return globalThis.__mongoosePromise;
+
+  return globalThis.globalMongoosePromise;
 };
