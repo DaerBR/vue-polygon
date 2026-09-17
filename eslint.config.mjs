@@ -1,6 +1,7 @@
 // @ts-check
 import { configs, plugins } from 'eslint-config-airbnb-extended';
 import stylistic from '@stylistic/eslint-plugin';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt(
@@ -78,4 +79,8 @@ export default withNuxt(
       'import-x/no-named-as-default': 'off',
     },
   },
+  // Must stay last: turns off every ESLint formatting rule that Prettier
+  // also has an opinion on, so `eslint --fix` and `prettier --write` (which
+  // lint-staged runs back to back) don't fight and undo each other's output.
+  eslintConfigPrettier,
 );
