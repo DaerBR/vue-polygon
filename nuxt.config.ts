@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       apiUrl: 'https://dev-dual-cookbook-server.onrender.com',
     },
   },
-  css: ['./app/assets/css/main.css'],
+  css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
