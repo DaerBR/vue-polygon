@@ -1,23 +1,8 @@
 // @ts-check
 import { configs, plugins } from 'eslint-config-airbnb-extended';
 import stylistic from '@stylistic/eslint-plugin';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import withNuxt from './.nuxt/eslint.config.mjs';
-
-// Nuxt only wires type-aware TypeScript parsing into its own generated
-// project references (app/server/shared/node); stray root-level config
-// files like drizzle.config.ts are deliberately left out of that. Airbnb's
-// TypeScript config enables type-aware parsing for every file, so it must
-// skip the same files Nuxt does, or typescript-eslint's project service
-// fails to find a project for them. (Extending Nuxt's own allowDefaultProject
-// list instead isn't possible: ESLint's flat-config merge turns two configs'
-// array values for the same parserOptions key into a corrupted plain object.)
-const rootConfigFilesOutsideNuxtProjects = ['drizzle.config.ts'];
-const airbnbTypeAwareConfigs = [plugins.typescriptEslint, ...configs.base.typescript].map(
-  (config) => ({
-    ...config,
-    ignores: [...(config.ignores ?? []), ...rootConfigFilesOutsideNuxtProjects],
-  }),
-);
 
 export default withNuxt(
   // Airbnb-style base rules: register the plugins the rule sets below need,
@@ -25,7 +10,8 @@ export default withNuxt(
   plugins.stylistic,
   plugins.importX,
   ...configs.base.recommended,
-  ...airbnbTypeAwareConfigs,
+  plugins.typescriptEslint,
+  ...configs.base.typescript,
   {
     // Airbnb's own @stylistic plugin registration only covers js/ts files,
     // so .vue files need it registered separately to use @stylistic rules
@@ -75,6 +61,14 @@ export default withNuxt(
     },
   },
   {
+    // Mongoose documents and MongoDB itself name the id field `_id`; it's
+    // not ours to rename.
+    files: ['server/**'],
+    rules: {
+      'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    },
+  },
+  {
     // eslint.config.mjs is executed directly by Node, so the relative
     // import of the Nuxt-generated config must keep its .mjs extension and
     // its default-exported `withNuxt` name, both of which the Airbnb import
@@ -85,4 +79,8 @@ export default withNuxt(
       'import-x/no-named-as-default': 'off',
     },
   },
+  // Must stay last: turns off every ESLint formatting rule that Prettier
+  // also has an opinion on, so `eslint --fix` and `prettier --write` (which
+  // lint-staged runs back to back) don't fight and undo each other's output.
+  eslintConfigPrettier,
 );

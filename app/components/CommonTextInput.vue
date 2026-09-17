@@ -6,13 +6,13 @@
       :disabled="isDisabled"
       :unstyled="true"
       :pt="pt"
-      placeholder=" "
       autocomplete="off"
       v-bind="$attrs"
+      :placeholder="placeholder"
     />
     <label
       :for="inputId"
-      class="absolute left-3 top-1/2 -translate-y-1/2 text-paragraph-s text-dual-grey-500 bg-white pointer-events-none transition-all duration-150 peer-focus:top-0 peer-focus:px-1 peer-focus:text-paragraph-xs peer-focus:text-dual-orange-600 peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:px-1 peer-not-placeholder-shown:text-paragraph-xs peer-not-placeholder-shown:text-dual-grey-600"
+      class="absolute left-3 -top-2 px-1 text-paragraph-xs text-dual-grey-600 bg-white pointer-events-none peer-focus:text-dual-orange-600"
     >
       {{ label }}
     </label>
@@ -29,6 +29,7 @@ withDefaults(
   defineProps<{
     label: string;
     isDisabled?: boolean;
+    placeholder?: string;
   }>(),
   {
     isDisabled: false,

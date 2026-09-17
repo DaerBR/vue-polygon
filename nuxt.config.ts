@@ -22,15 +22,20 @@ export default defineNuxtConfig({
     port: 5174,
   },
   runtimeConfig: {
+    allowedEmails: '',
+    cloudinaryCloudName: '',
+    cloudinaryApiKey: '',
+    cloudinaryApiSecret: '',
+    mongoUri: '',
     public: {
-      apiUrl: 'https://dev-dual-cookbook-server.onrender.com',
+      apiUrl: 'http://localhost:5174',
     },
   },
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ['@primevue/nuxt-module', 'nuxt-aos', '@vite-pwa/nuxt', '@nuxt/eslint'],
+  modules: ['@primevue/nuxt-module', 'nuxt-aos', '@vite-pwa/nuxt', 'nuxt-auth-utils', '@nuxt/eslint'],
   primevue: {/* Configuration */},
   pwa: {
     registerType: 'autoUpdate',

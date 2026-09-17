@@ -73,3 +73,5 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+[Migration from Express API and Mongo](https://claude.ai/code/artifact/c1cd5084-997c-4200-b5f0-f31b0c641981?via=auto_preview) report.
